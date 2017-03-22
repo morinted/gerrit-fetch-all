@@ -1,5 +1,5 @@
 #! /bin/sh
-REMOTE="${1-review}"
+REMOTE="${1-origin}"
 git ls-remote "${REMOTE}" | grep /changes/ | awk '{print $2;}' | while read REF
 do
 	git fetch "${REMOTE}" "${REF}"
