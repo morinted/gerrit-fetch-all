@@ -1,7 +1,11 @@
 #! /bin/sh
 REMOTE="${1-origin}"
+BRANCHES=$(git branch -l)
 git ls-remote "${REMOTE}" | grep /changes/ | awk '{print $2;}' | while read REF
 do
-	git fetch "${REMOTE}" "${REF}"
-	git branch `echo "${REF}" | sed 's#refs/changes/../#change/#'` FETCH_HEAD
+    local_name=$(echo "${REF}" | sed 's#refs/changes/../#change/#')
+    if [[ $BRANCHES != *"$local_name"* ]]; then
+      git fetch "${REMOTE}" "${REF}"
+      git branch `echo "${REF}" | sed 's#refs/changes/../#change/#'` FETCH_HEAD
+    fi
 done
